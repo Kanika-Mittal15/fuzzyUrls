@@ -1,11 +1,23 @@
-from django.shortcuts import render
-from django.http import JsonResponse
+from django.shortcuts import render,get_object_or_404
+from django.http import HttpResponseRedirect,JsonResponse
 from django.conf import settings
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import re
-from .models import create_short_url
+from .models import create_short_url,url_collection # Import MongoDB collection
+
+def redirect_to_original(request, short_code):
+    """
+    Redirects the user to the original URL if the short code exists in MongoDB.
+    """
+    # Query MongoDB for the short_code
+    result = url_collection.find_one({"short_code": short_code})
+
+    if result:
+        original_url = result["original_url"]
+        return HttpResponseRedirect(original_url)  # Redirect to the original URL
+    else:
+        return JsonResponse({"error": "Short URL not found"}, status=404)
 
 # URL validation regex
 URL_REGEX = re.compile(r"^(https?|ftp)://[^\s/$.?#].[^\s]*$")
