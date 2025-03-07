@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from pymongo import MongoClient
-
+from django.conf import settings
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +28,9 @@ DEBUG = True
 
 MONGO_URI = "mongodb://localhost:27017/"
 MONGO_DB = "fuzzyurls"
+
+client = MongoClient(settings.MONGO_URI)
+MONGO_DB = client[settings.MONGO_DB]
 
 
 # Application definition
