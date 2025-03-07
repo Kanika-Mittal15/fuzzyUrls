@@ -6,6 +6,10 @@ import json
 import re
 from .models import create_short_url,url_collection # Import MongoDB collection
 
+
+# Initialize MongoDB connection
+db=settings.MONGO_DB 
+
 def redirect_to_original(request, short_code):
     """
     Redirects the user to the original URL if the short code exists in MongoDB.
@@ -44,9 +48,6 @@ def shorten_url(request):
 
     return JsonResponse({"error": "Only POST requests allowed"}, status=405)
 
-db=settings.MONGO_DB
-
-# Initialize MongoDB connection
 
 def home(request):
     return JsonResponse({"message": "Welcome to FuzzyURLs Backend!"})
